@@ -12,13 +12,6 @@ variable "aws_ec2_instance" {
 
 }
 
-variable "vpc_cidr_block" {
-  description = "CIDR block for VPC"
-  type        = string
-  default     = "172.16.10.0/24"
-
-}
-
 variable "aws_availability_zone" {
   description = "default AWS availability zone"
   type        = string
@@ -39,11 +32,3 @@ variable "aws_private_key" {
   default     = "FinalTaskEPAM"
 
 }
-
-variable "aws_ami_id" {
-  description = "default Amazon Linux 2 ami id for eu-central-1"
-  type        = string
-  default     = "ami-043097594a7df80ec"
-
-}
-
