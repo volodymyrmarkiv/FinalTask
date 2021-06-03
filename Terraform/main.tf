@@ -1,55 +1,47 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
     }
   }
 }
 
+# Configure the AWS Provider
 provider "aws" {
-  profile = "default"
-  region  = var.aws_region
-}
-
-# Jenkins Controller
-resource "aws_instance" "Jenkins_Controller" {
-  ami               = var.aws_ami_id
-  instance_type     = var.aws_ec2_instance
-  availability_zone = var.aws_availability_zone
-  subnet_id         = var.aws_subnet_id
-  key_name          = var.aws_private_key
-  tags = {
-    Name    = "Jenkins Controller"
-    OS      = "Amazon Linux"
-    Purpose = "Controller"
-  }
+  region = "eu-central-1"
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.0.0"
 
-  name = "final-task-vpc"
-  cidr = "10.0.0.0/16"
+  name = var.vpc_name
+  cidr = var.vpc_cidr
 
-  azs             = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
+  azs             = var.vpc_azs
+  private_subnets = var.vpc_private_subnets
+  public_subnets  = var.vpc_public_subnets
 
-  enable_nat_gateway = true
-  enable_vpn_gateway = true
-  # Skip creation of EIPs for the NAT Gateways
-  reuse_nat_ips = true
-  # IPs specified here as input to the module
-  external_nat_ip_ids = aws_eip.nat.*.id
+  enable_nat_gateway = var.vpc_enable_nat_gateway
+
+  tags = var.vpc_tags
+}
+
+module "ec2_instances" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "2.19.0"
+
+  name           = "my-ec2-cluster"
+  instance_count = 2
+
+  ami                    = "ami-043097594a7df80ec"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [module.vpc.default_security_group_id]
+  subnet_id              = module.vpc.public_subnets[0]
+
   tags = {
     Terraform   = "true"
     Environment = "dev"
   }
-}
-
-resource "aws_eip" "nat" {
-  count = 3
-
-  vpc = true
 }

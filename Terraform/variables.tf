@@ -1,49 +1,46 @@
-variable "aws_region" {
-  description = "default AWS region"
-  type        = string
-  default     = "eu-central-1"
+# Input variable definitions
 
+variable "vpc_name" {
+  description = "Name of VPC"
+  type        = string
+  default     = "example-vpc"
 }
 
-variable "aws_ec2_instance" {
-  description = "default AWS EC2 instance type"
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
   type        = string
-  default     = "t2.micro"
-
+  default     = "10.0.0.0/16"
 }
 
-#variable "vpc_cidr_block" {
-#  description = "CIDR block for VPC"
-#  type        = string
-#  default     = "172.16.10.0/24"
-#
-#}
-
-variable "aws_availability_zone" {
-  description = "default AWS availability zone"
-  type        = string
-  default     = "eu-central-1b"
-
+variable "vpc_azs" {
+  description = "Availability zones for VPC"
+  type        = list(string)
+  default     = ["eu-central-1b"]
 }
 
-variable "aws_subnet_id" {
-  description = "default AWS subnet"
-  type        = string
-  default     = "subnet-24cb6558"
-
+variable "vpc_private_subnets" {
+  description = "Private subnets for VPC"
+  type        = list(string)
+  default     = ["10.0.1.0/24"]
 }
 
-variable "aws_private_key" {
-  description = "name of the private key"
-  type        = string
-  default     = "FinalTaskEPAM"
-
+variable "vpc_public_subnets" {
+  description = "Public subnets for VPC"
+  type        = list(string)
+  default     = ["10.0.101.0/24"]
 }
 
-variable "aws_ami_id" {
-  description = "default Amazon Linux 2 ami id for eu-central-1"
-  type        = string
-  default     = "ami-043097594a7df80ec"
-
+variable "vpc_enable_nat_gateway" {
+  description = "Enable NAT gateway for VPC"
+  type        = bool
+  default     = true
 }
 
+variable "vpc_tags" {
+  description = "Tags to apply to resources created by VPC module"
+  type        = map(string)
+  default = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
