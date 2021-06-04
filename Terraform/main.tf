@@ -58,44 +58,39 @@ resource "aws_subnet" "eu_central_subnet" {
 
   depends_on = [aws_internet_gateway.gw]
 }
-#################################################################
-resource "aws_security_group" "ssh_sg" {
-  tags = {
-    type = "SSH security group"
-  }
-}
 
-resource "aws_security_group_rule" "ssh_rule" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.ssh_sg.id
-}
-
-resource "aws_security_group" "jenkins_sg" {
-  tags = {
-    type = "SSH security group"
-  }
-}
-
-resource "aws_security_group_rule" "jenkins_rule" {
-  type              = "egress"
-  from_port         = 8080
-  to_port           = 8080
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.jenkins_sg.id
-}
-
+# Copy bash script with instructions to create ansible environment
 resource "aws_instance" "jen_controller" {
   ami               = data.aws_ami.amazon_linux.id
   instance_type     = var.ec2_instance_type
   availability_zone = "eu-central-1c"
   key_name          = "FinalTaskEPAM"
   private_ip        = "172.31.0.10"
-  #subnet_id         = aws_subnet.eu_central_subnet.id
+
+  provisioner "file" {
+    source      = "jen_controller/provisioner.sh"
+    destination = "/home/ec2-user/provisioner.sh"
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      host        = aws_instance.jen_controller.public_ip
+    }
+  }
+
+  # Enable epel-release and install ansible
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /home/ec2-user/provisioner.sh",
+      "bash /home/ec2-user/provisioner.sh"
+    ]
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      host        = aws_instance.jen_controller.public_ip
+    }
+  }
 
   # Add instance to security group
   vpc_security_group_ids = ["sg-fea3788e",
