@@ -5,7 +5,8 @@
 
 - name: Install java-1.8.0-openjdk-devel
   yum: update_cache=yes name=java-1.8.0-openjdk-devel state=latest
-  when: inventory_hostname == "AmazonLinux3"
+  when: (inventory_hostname == "AmazonLinux3") or 
+        (inventory_hostname == "AmazonLinux")
   # ideas for future
   #when: ansible_facts['address'] == '172.31.0.12'
   #when: ansible_default_ipv4.address == "172.31.0.12"
