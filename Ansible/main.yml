@@ -2,11 +2,14 @@
 - name: Deploy envirolment on all hosts
   hosts: all
   become: yes
+  #gather_facts: yes
 
   roles:
     role: 
     - tomcat
     - java
-    - docker
+    - jenkins
+    - git
+    - maven
     
 

@@ -1,2 +1,21 @@
 ---
 # tasks file for jenkins
+- block: # Install Jenkins to AmazonLinux1
+
+  - name: Add official Jenkins repo for CentOS
+    yum_repository:
+      name: jenkins
+      state: present
+      description: "Official Jenkins Yum Repo"
+      baseurl: "http://pkg.jenkins.io/redhat"
+      gpgkey: "https://pkg.jenkins.io/redhat-stable/jenkins.io.key"
+      gpgcheck: yes
+      enabled: yes
+
+  - name: Install Jenkins
+    yum: update_cache=yes name=jenkins state=present
+
+  - name: Start and enable Jenkins during boot
+    service: name=jenkins state=started enabled=yes
+
+  when: inventory_hostname == "AmazonLinux1"
