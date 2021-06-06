@@ -19,4 +19,3 @@
     service: name=jenkins state=started enabled=yes
 
   when: inventory_hostname == "AmazonLinux1"
-  123
