@@ -1,0 +1,14 @@
+---
+# tasks file for tomcat
+- block: # For Web-server
+
+  - name: Install Tomcat web-server
+    yum: update_cache=yes name=tomcat state=latest
+    # ideas for future
+    #when: ansible_facts['address'] == '172.31.0.12'
+    #when: ansible_default_ipv4.address == "172.31.0.12"
+
+  - name: Start and enable Tomcat during boot
+    service: name=tomcat state=started enabled=yes
+
+  when: inventory_hostname == "AmazonLinux3"

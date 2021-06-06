@@ -15,3 +15,8 @@ output "web-server_ip" {
   description = "Public IP addresses of EC2 instances"
   value       = aws_instance.web_server.public_ip
 }
+
+output "build_ip" {
+  description = "Public IP addresses of EC2 instances"
+  value       = aws_instance.build.public_ip
+}

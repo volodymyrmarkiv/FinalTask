@@ -77,6 +77,13 @@ resource "aws_instance" "jen_controller" {
       host        = aws_instance.jen_controller.public_ip
     }
   }
+/* # Install git on Jen/Ans Controller. Try module "consul" and S3 Bucket :)
+  provisioner "git" {
+    inline = [
+      "sudo yum install -y git",
+      "git clone ..."
+    ]
+} */
 
   # Enable epel-release and install ansible
   provisioner "remote-exec" {
@@ -122,6 +129,24 @@ resource "aws_instance" "web_server" {
   }
 }
 
+resource "aws_instance" "build" {
+  ami               = data.aws_ami.amazon_linux.id
+  instance_type     = var.ec2_instance_type
+  availability_zone = "eu-central-1c"
+  key_name          = "FinalTaskEPAM"
+  private_ip        = "172.31.0.12"
+  #subnet_id         = aws_subnet.eu_central_subnet.id
+
+  # Add instance to security group
+  vpc_security_group_ids = ["sg-fea3788e",
+    aws_security_group.ssh_sg.id
+  ]
+
+  tags = {
+    Name = "Jenkins build agent"
+  }
+}
+
 resource "aws_eip" "eip_jen_controller" {
   instance = aws_instance.jen_controller.id
   vpc      = true
@@ -129,6 +154,11 @@ resource "aws_eip" "eip_jen_controller" {
 
 resource "aws_eip" "eip_web_server" {
   instance = aws_instance.web_server.id
+  vpc      = true
+}
+
+resource "aws_eip" "eip_build" {
+  instance = aws_instance.build.id
   vpc      = true
 }
 # Static ip for Jenkins/Ansible Controller

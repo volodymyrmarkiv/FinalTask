@@ -1,0 +1,5 @@
+---
+# tasks file for maven
+- name: Install Maven
+  yum: name=maven state=latest
+  when: inventory_hostname == "AmazonLinux2"
