@@ -3,14 +3,14 @@
 - block: # Install Jenkins to AmazonLinux1
 
   - name: Add official Jenkins repo for CentOS
-    yum_repository:
-      name: jenkins
+    get_url:
+      url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+      dest: /etc/yum.repos.d/jenkins.repo
+
+  - name: import jenkins key
+    rpm_key:
       state: present
-      description: Official Jenkins Yum Repo
-      baseurl: http://pkg.jenkins.io/redhat
-      gpgkey: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-      gpgcheck: yes
-      enabled: yes
+      key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
 
   - name: Install Jenkins
     yum: update_cache=yes name=jenkins state=present
