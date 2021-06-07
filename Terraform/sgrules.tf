@@ -17,12 +17,12 @@ resource "aws_security_group_rule" "ssh_rule" {
 # Open Jenkins 8080 port
 resource "aws_security_group" "jenkins_sg" {
   tags = {
-    type = "SSH security group"
+    type = "Jenkins security group"
   }
 }
 
 resource "aws_security_group_rule" "jenkins_rule" {
-  type              = "ingress"
+  type              = "egress"
   from_port         = 8080
   to_port           = 8080
   protocol          = "tcp"

@@ -12,14 +12,17 @@ sudo yum-config-manager --enable epel
 # Install ansible
 sudo yum install -y ansible
 
-# Create dir for ansible configuration
-mkdir /home/$user/ansible
-
 # Change path to ansible inventory
 sudo sed -i s'/#inventory\ \ \ \ \ \ =\ \/etc\/ansible\/hosts/inventory\ \ \ \ \ \ =\ \/home\/ec2-user\/ansible\/hosts/' /etc/ansible/ansible.cfg
 
 # Disable ssh connection approval
-sudo sed -i s'/#host_key_checking\ =\ True/host_key_checking\ =\ false/' /etc/ansible/ansible.cfg
+sudo sed -i s'/#host_key_checking\ =\ False/host_key_checking\ =\ False/' /etc/ansible/ansible.cfg
+
+# Install Git
+sudo yum install -y git
+
+# Create dir for ansible configuration
+mkdir /home/$user/ansible
 
 # Add ansible hosts to inventory file
 cat  <<EOF >> /home/$user/ansible/hosts
