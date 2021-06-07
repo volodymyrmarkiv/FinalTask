@@ -1,4 +1,3 @@
 ---
 # vars file for jenkins
-admin_username: markiv
-admin_password: 12345
+jenkins_home: /var/lib/jenkins

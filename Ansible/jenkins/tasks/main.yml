@@ -18,10 +18,10 @@
   - name: Start and enable Jenkins during boot
     service: name=jenkins state=started enabled=yes
 
-    # Test block security.groovy.j2
+# Create directory if not exists
   - name: Create initialization scripts directory
     file: 
-      path: /var/lib/jenkins/init.groovy.d
+      path: '{{ jenkins_home }}/init.groovy.d'
       state: directory
       owner: jenkins
       group: jenkins
@@ -29,24 +29,16 @@
 
   - name: Add initialization script to setup basic security
     template: 
-      src: security.groovy.j2
-      dest: /var/lib/jenkins/init.groovy.d/security.groovy
+      src: security.groovy
+      dest: '{{ jenkins_home }}/init.groovy.d/security.groovy'
+      owner: jenkins
+      group: jenkins
       mode: 0775
     notify: Restart Jenkins
 
-  # test block, delete if needed
-  - name: Wait for Jenkins to start up
-    uri:
-      url: http://localhost:8080
-      status_code: 200
-      timeout: 5
-    register: jenkins_service_status
-  # Keep trying for 5 mins in 5 sec intervals
-    retries: 60
-    delay: 5
-    until: >
-      'status' in jenkins_service_status and
-      jenkins_service_status['status'] == 200
+  - name: Time for restarting Jenkins
+    pause:
+      seconds: 30
 
   - name: Install plugin
     jenkins_plugin:
