@@ -18,4 +18,4 @@
   - name: Start and enable Jenkins during boot
     service: name=jenkins state=started enabled=yes
 
-  when: inventory_hostname == "AmazonLinux1"
+  when: inventory_hostname == "AmazonLinux"

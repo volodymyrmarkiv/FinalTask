@@ -8,7 +8,7 @@ output "vpc_public_subnets" {
 
 output "jen-ans_controller_ip" {
   description = "Public IP addresses of EC2 instances"
-  value       = aws_instance.jen_controller.public_dns
+  value       = aws_instance.jen_controller.public_ip
 }
 
 output "web-server_ip" {

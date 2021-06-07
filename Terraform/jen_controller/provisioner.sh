@@ -16,7 +16,10 @@ sudo yum install -y ansible
 mkdir /home/$user/ansible
 
 # Change path to ansible inventory
-sudo sed -i s'/#inventory\ \ \ \ \ \ \=\ \/etc\/ansible\/hosts/inventory\ \ \ \ \ \ =\ \/home\/ec2-user\/ansible\/hosts/' /etc/ansible/ansible.cfg
+sudo sed -i s'/#inventory\ \ \ \ \ \ =\ \/etc\/ansible\/hosts/inventory\ \ \ \ \ \ =\ \/home\/ec2-user\/ansible\/hosts/' /etc/ansible/ansible.cfg
+
+# Disable ssh connection approval
+sudo sed -i s'/#host_key_checking\ =\ True/host_key_checking\ =\ false/' /etc/ansible/ansible.cfg
 
 # Add ansible hosts to inventory file
 cat  <<EOF >> /home/$user/ansible/hosts
