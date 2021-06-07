@@ -1,2 +1,4 @@
 ---
 # vars file for jenkins
+jenkins.admin_username: markiv
+jenkins.admin_password: 12345

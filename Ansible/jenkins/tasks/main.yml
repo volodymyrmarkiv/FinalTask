@@ -19,19 +19,20 @@
     service: name=jenkins state=started enabled=yes
 
     # Test block security.groovy.j2
-
   - name: Create initialization scripts directory
     file: 
-      path=/var/lib/jenkins/init.groovy.d
-      state=directory
-      owner=jenkins
-      group=jenkins
-      mode=0775
+      path: /var/lib/jenkins/init.groovy.d
+      state: directory
+      owner: jenkins
+      group: jenkins
+      mode: 0775
 
   - name: Add initialization script to setup basic security
     template: 
-      src=security.groovy.j2
-      dest=/var/lib/jenkins/init.groovy.d/security.groovy
+      src: security.groovy.j2
+      dest: /var/lib/jenkins/init.groovy.d/security.groovy
+      mode: 0775
+    notify: Restart Jenkins
 
   # test block, delete if needed
   - name: Wait for Jenkins to start up
