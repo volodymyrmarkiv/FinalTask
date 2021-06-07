@@ -22,7 +22,7 @@ resource "aws_security_group" "jenkins_sg" {
 }
 
 resource "aws_security_group_rule" "jenkins_rule" {
-  type              = "egress"
+  type              = "ingress"
   from_port         = 8080
   to_port           = 8080
   protocol          = "tcp"

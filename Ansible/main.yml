@@ -3,11 +3,11 @@
   hosts: all
   become: yes
 
-  roles: 
-    - tomcat
+  roles:
+    - git
     - java
     - jenkins
-    - git
     - maven
+    - tomcat
     
 

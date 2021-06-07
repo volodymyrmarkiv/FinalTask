@@ -118,6 +118,31 @@ resource "aws_instance" "web_server" {
   private_ip        = "172.31.0.11"
   #subnet_id         = aws_subnet.eu_central_subnet.id
 
+  provisioner "file" {
+    source      = "jen_controller/mkdir_jenkins.sh"
+    destination = "/home/ec2-user/mkdir_jenkins.sh"
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      host        = aws_instance.web_server.public_ip
+    }
+  }
+
+  # Create "jenkins" directory inside node
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /home/ec2-user/mkdir_jenkins.sh",
+      "bash /home/ec2-user/mkdir_jenkins.sh"
+    ]
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      host        = aws_instance.web_server.public_ip
+    }
+  }
+
   # Add instance to security group
   vpc_security_group_ids = ["sg-fea3788e",
     aws_security_group.ssh_sg.id,
@@ -136,6 +161,31 @@ resource "aws_instance" "build" {
   key_name          = "FinalTaskEPAM"
   private_ip        = "172.31.0.12"
   #subnet_id         = aws_subnet.eu_central_subnet.id
+
+  provisioner "file" {
+    source      = "jen_controller/mkdir_jenkins.sh"
+    destination = "/home/ec2-user/mkdir_jenkins.sh"
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      host        = aws_instance.build.public_ip
+    }
+  }
+
+  # Create "jenkins" directory inside node
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /home/ec2-user/mkdir_jenkins.sh",
+      "bash /home/ec2-user/mkdir_jenkins.sh"
+    ]
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      host        = aws_instance.build.public_ip
+    }
+  }
 
   # Add instance to security group
   vpc_security_group_ids = ["sg-fea3788e",
@@ -161,32 +211,3 @@ resource "aws_eip" "eip_build" {
   instance = aws_instance.build.id
   vpc      = true
 }
-# Static ip for Jenkins/Ansible Controller
-/*
-resource "aws_eip" "static_ip" {
-  vpc = true
-
-  instance = aws_instance.jen_controller.id
-  associate_with_private_ip = "172.31.0.10"
-  depends_on = [aws_internet_gateway.gw]
-}
-*/
-/*
-module "ec2_instances" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "2.19.0"
-
-  name           = "my-cluster"
-  instance_count = 2
-
-  ami                    = data.aws_ami.amazon_linux.id
-  instance_type          = "t2.micro"
-  vpc_security_group_ids = [module.vpc.default_security_group_id]
-  subnet_id              = module.vpc.public_subnets[0]
-
-  tags = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
-}
-*/
