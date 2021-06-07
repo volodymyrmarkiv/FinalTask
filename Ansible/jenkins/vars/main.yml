@@ -1,3 +1,5 @@
 ---
 # vars file for jenkins
 jenkins_home: /var/lib/jenkins
+jenkins_user: markiv
+jenkins_passwd: markiv

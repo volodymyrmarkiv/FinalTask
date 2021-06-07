@@ -40,8 +40,18 @@
     pause:
       seconds: 30
 
-  - name: Install plugin
+  - name: Install plugin blueocean
     jenkins_plugin:
       name: blueocean
+      url_username: '{{ jenkins_user }}'
+      url_password: '{{ jenkins_passwd }}'
+      url: http://localhost:8080
+
+  - name: Install plugin greenballs
+    jenkins_plugin:
+      name: blueocean
+      url_username: '{{ jenkins_user }}'
+      url_password: '{{jenkins_passwd}}'
+      url: http://localhost:8080
 
   when: inventory_hostname == "AmazonLinux"
