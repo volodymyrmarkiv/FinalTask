@@ -18,6 +18,35 @@
   - name: Start and enable Jenkins during boot
     service: name=jenkins state=started enabled=yes
 
+    # Test block security.groovy.j2
+
+  - name: Create initialization scripts directory
+    file: 
+      path=/var/lib/jenkins/init.groovy.d
+      state=directory
+      owner=jenkins
+      group=jenkins
+      mode=0775
+
+  - name: Add initialization script to setup basic security
+    template: 
+      src=security.groovy.j2
+      dest=/var/lib/jenkins/init.groovy.d/security.groovy
+
+  # test block, delete if needed
+  - name: Wait for Jenkins to start up
+    uri:
+      url: http://localhost:8080
+      status_code: 200
+      timeout: 5
+    register: jenkins_service_status
+  # Keep trying for 5 mins in 5 sec intervals
+    retries: 60
+    delay: 5
+    until: >
+      'status' in jenkins_service_status and
+      jenkins_service_status['status'] == 200
+
   - name: Install plugin
     jenkins_plugin:
       name: blueocean

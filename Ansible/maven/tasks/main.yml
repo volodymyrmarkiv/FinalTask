@@ -2,4 +2,4 @@
 # tasks file for maven
 - name: Install Maven
   yum: update_cache=yes name=maven state=latest
-  when: inventory_hostname == "AmazonLinux2"
+  when: inventory_hostname == "AmazonLinux3"
