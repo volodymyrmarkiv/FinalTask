@@ -5,33 +5,33 @@
   tasks:
     - name: Start installing
       jenkins_plugin:
-        name: {{ item.name }}
+        name: {{ item }}
         url_username: '{{ jenkins_user }}'
         url_password: '{{ jenkins_passwd }}'
         url: http://localhost:8080
       loop:
-        - {{ name: greenballs }}
-        - {{ name: locale }}
-        - {{ name: publish-over-ssh }}
-        - {{ name: ssh-slaves }}
-        - {{ name: cloudbees-folder }}
-        - {{ name: antisamy-markup-formatter }}
-        - {{ name: build-timeout }}
-        - {{ name: credentials-binding }}
-        - {{ name: timestamper }}
-        - {{ name: ws-cleanup }}
-        - {{ name: workflow-aggregator }}
-        - {{ name: pipeline-stage-view }}
-        - {{ name: pipeline-github-lib }}
-        - {{ name: github-branch-source }}
-        - {{ name: git }}
-        - {{ name: github }}
-        - {{ name: pipeline-maven }}
-        - {{ name: maven-plugin }}
+        - greenballs
+        - locale
+        - publish-over-ssh
+        - ssh-slaves
+        - cloudbees-folder
+        - antisamy-markup-formatter
+        - build-timeout
+        - credentials-binding
+        - timestamper
+        - ws-cleanup
+        - workflow-aggregator
+        - pipeline-stage-view
+        - pipeline-github-lib
+        - github-branch-source
+        - git
+        - github
+        - pipeline-maven
+        - maven-plugin
 
 
 '''
-      - name: Install plugin blueocean
+  - name: Install plugin blueocean
     jenkins_plugin:
       name: blueocean
       url_username: '{{ jenkins_user }}'
