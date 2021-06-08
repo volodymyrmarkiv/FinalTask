@@ -59,7 +59,7 @@ resource "aws_subnet" "eu_central_subnet" {
   depends_on = [aws_internet_gateway.gw]
 }
 
-# Copy bash script with instructions to create ansible environment
+
 resource "aws_instance" "jen_controller" {
   ami               = data.aws_ami.amazon_linux.id
   instance_type     = var.ec2_instance_type
@@ -67,6 +67,12 @@ resource "aws_instance" "jen_controller" {
   key_name          = "FinalTaskEPAM"
   private_ip        = "172.31.0.10"
 
+# Prevent instance destroing
+  lifecycle {
+   prevent_destroy = true
+}
+
+# Copy bash script with instructions to create ansible environment
   provisioner "file" {
     source      = "jen_controller/provisioner.sh"
     destination = "/home/ec2-user/provisioner.sh"
@@ -118,6 +124,11 @@ resource "aws_instance" "web_server" {
   private_ip        = "172.31.0.11"
   #subnet_id         = aws_subnet.eu_central_subnet.id
 
+  # Prevent instance destroing
+  lifecycle {
+   prevent_destroy = true
+}
+
   provisioner "file" {
     source      = "jen_controller/mkdir_jenkins.sh"
     destination = "/home/ec2-user/mkdir_jenkins.sh"
@@ -161,6 +172,11 @@ resource "aws_instance" "build" {
   key_name          = "FinalTaskEPAM"
   private_ip        = "172.31.0.12"
   #subnet_id         = aws_subnet.eu_central_subnet.id
+
+  # Prevent instance destroing
+  lifecycle {
+   prevent_destroy = true
+}
 
   provisioner "file" {
     source      = "jen_controller/mkdir_jenkins.sh"

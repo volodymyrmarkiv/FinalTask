@@ -27,6 +27,7 @@
       group: jenkins
       mode: 0775
 
+# Create jenkins user
   - name: Add initialization script to setup basic security
     template: 
       src: security.groovy
@@ -34,24 +35,43 @@
       owner: jenkins
       group: jenkins
       mode: 0775
+  
+  - name: "Turn off Jenkins setup wizard"
+    lineinfile:
+      dest: /etc/sysconfig/jenkins
+      regexp: '^JAVA_ARGS='
+      line: 'JAVA_ARGS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"'
+      insertbefore: '^DAEMON_ARGS='
     notify: Restart Jenkins
 
   - name: Time for restarting Jenkins
     pause:
-      seconds: 30
+      seconds: 60
 
-  - name: Install plugin blueocean
+  - name: Start installing
     jenkins_plugin:
-      name: blueocean
+      name: {{ item.name }}
       url_username: '{{ jenkins_user }}'
       url_password: '{{ jenkins_passwd }}'
       url: http://localhost:8080
-
-  - name: Install plugin greenballs
-    jenkins_plugin:
-      name: blueocean
-      url_username: '{{ jenkins_user }}'
-      url_password: '{{jenkins_passwd}}'
-      url: http://localhost:8080
-
+    loop:
+      - {{ name: greenballs }}
+      - {{ name: locale }}
+      - {{ name: publish-over-ssh }}
+      - {{ name: ssh-slaves }}
+      - {{ name: cloudbees-folder }}
+      - {{ name: antisamy-markup-formatter }}
+      - {{ name: build-timeout }}
+      - {{ name: credentials-binding }}
+      - {{ name: timestamper }}
+      - {{ name: ws-cleanup }}
+      - {{ name: workflow-aggregator }}
+      - {{ name: pipeline-stage-view }}
+      - {{ name: pipeline-github-lib }}
+      - {{ name: github-branch-source }}
+      - {{ name: git }}
+      - {{ name: github }}
+      - {{ name: pipeline-maven }}
+      - {{ name: maven-plugin }}
+        
   when: inventory_hostname == "AmazonLinux"
