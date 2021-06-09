@@ -11,4 +11,4 @@
   - name: Start and enable Tomcat during boot
     service: name=tomcat state=started enabled=yes
 
-  when: inventory_hostname == "AmazonLinux3"
+  when: inventory_hostname == "AmazonLinux2"
