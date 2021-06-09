@@ -44,9 +44,13 @@
       insertbefore: '^DAEMON_ARGS='
     notify: Restart Jenkins
 
+  - name: Pause for 90 seconds to let Jenkins getting restarted
+    pause:
+      seconds: 90
+
   - name: Install Jenkins plugins
     jenkins_plugin:
-      name: {{ item }}
+      name: '{{ item }}'
       url_username: '{{ jenkins_user }}'
       url_password: '{{ jenkins_passwd }}'
       url: http://localhost:8080
@@ -70,6 +74,5 @@
       - pipeline-maven
       - maven-plugin
     notify: Restart Jenkins
-    
-  
+
   when: inventory_hostname == "AmazonLinux"
