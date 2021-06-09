@@ -73,6 +73,7 @@
       - github
       - pipeline-maven
       - maven-plugin
+      - ssh-agent
     notify: Restart Jenkins
 
   when: inventory_hostname == "AmazonLinux"

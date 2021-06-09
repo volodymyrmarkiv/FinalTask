@@ -21,6 +21,20 @@ sudo sed -i s'/#host_key_checking\ =\ False/host_key_checking\ =\ False/' /etc/a
 # Install Git
 sudo yum install -y git
 
+# Create id_rsa for github without asking questions
+ssh-keygen -t rsa -f /home/$user/.ssh/id_rsa -q -P ""
+
+# Add necessary rights to file
+sudo chmod 400 /home/$user/.ssh/FinalTaskEPAM.pem
+sudo chown $user:$user /home/$user/.ssh/FinalTaskEPAM.pem
+
+# Copy id_rsa to other instances
+scp -i /home/$user/.ssh/FinalTaskEPAM.pem -o StrictHostKeyChecking=no /home/$user/.ssh/id_rsa $user@172.31.0.12:/home/$user/.ssh
+scp -i /home/$user/.ssh/FinalTaskEPAM.pem -o StrictHostKeyChecking=no /home/$user/.ssh/id_rsa $user@172.31.0.11:/home/$user/.ssh
+
+# Add github to known_hosts
+ssh -o StrictHostKeyChecking=no -T git@github.com &>/dev/null
+
 # Create dir for ansible configuration
 mkdir /home/$user/ansible
 

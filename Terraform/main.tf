@@ -67,6 +67,17 @@ resource "aws_instance" "jen_controller" {
   key_name          = "FinalTaskEPAM"
   private_ip        = "172.31.0.10"
 
+# Add private Amazon key to instance
+  provisioner "file" {
+    source = "/Users/caroot/.aws/FinalTaskEPAM.pem"
+    destination = "/home/ec2-user/.ssh/FinalTaskEPAM.pem"
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      host        = aws_instance.jen_controller.public_ip
+  }
+}
 
 # Copy bash script with instructions to create ansible environment
   provisioner "file" {
@@ -130,6 +141,7 @@ resource "aws_instance" "web_server" {
       host        = aws_instance.web_server.public_ip
     }
   }
+
 
   # Create "jenkins" directory inside node
   provisioner "remote-exec" {

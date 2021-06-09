@@ -2,4 +2,6 @@
 # tasks file for git
 - name: Install Git
   yum: update_cache=yes name=git state=latest
-  when: inventory_hostname == "AmazonLinux2"
+  when: (inventory_hostname == "AmazonLinux2") or
+        (inventory_hostname == "AmazonLinux3")
+        
