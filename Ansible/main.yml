@@ -9,5 +9,6 @@
     - jenkins
     - maven
     - tomcat
+    - docker
     
 
