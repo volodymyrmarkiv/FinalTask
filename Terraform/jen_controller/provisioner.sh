@@ -48,4 +48,7 @@ AmazonLinux2 ansible_host=172.31.0.11 ansible_user=ec2-user ansible_ssh_private_
 
 [build]
 AmazonLinux3 ansible_host=172.31.0.12 ansible_user=ec2-user ansible_ssh_private_key_file=/home/ec2-user/.ssh/FinalTaskEPAM.pem
+
+[test]
+AmazonLinux4 ansible_host=172.31.0.13 ansible_user=ec2-user ansible_ssh_private_key_file=/home/ec2-user/.ssh/FinalTaskEPAM.pem
 EOF

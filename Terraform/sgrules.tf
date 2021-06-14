@@ -29,3 +29,19 @@ resource "aws_security_group_rule" "jenkins_rule" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.jenkins_sg.id
 }
+
+# Open Sonarqube 9000 port
+resource "aws_security_group" "sonarqube_sg" {
+  tags = {
+    type = "Sonarqube security group"
+  }
+}
+
+resource "aws_security_group_rule" "sonarqube_rule" {
+  type              = "ingress"
+  from_port         = 9000
+  to_port           = 9000
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.sonarqube_sg.id
+}

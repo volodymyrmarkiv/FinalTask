@@ -74,6 +74,7 @@
       - pipeline-maven
       - maven-plugin
       - ssh-agent
+      - blueocean
     notify: Restart Jenkins
 
   when: inventory_hostname == "AmazonLinux"

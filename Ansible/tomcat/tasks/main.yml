@@ -11,4 +11,8 @@
   - name: Start and enable Tomcat during boot
     service: name=tomcat state=started enabled=yes
 
+  - name: Add ec2-user to tomcat group
+    shell:
+      cmd: usermod -a -G tomcat ec2-user
+
   when: inventory_hostname == "AmazonLinux2"

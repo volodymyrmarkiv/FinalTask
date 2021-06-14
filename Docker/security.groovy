@@ -8,7 +8,7 @@ def instance = Jenkins.getInstance()
 println "--> creating local user 'markiv'"
 
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-hudsonRealm.createAccount('markiv','markiv')
+hudsonRealm.createAccount('admin','admin')
 instance.setSecurityRealm(hudsonRealm)
 
 def strategy = new FullControlOnceLoggedInAuthorizationStrategy()

@@ -5,7 +5,7 @@ import hudson.security.*
 
 def instance = Jenkins.getInstance()
 
-println "--> creating local user 'markiv'"
+println "--> creating local user '{{ jenkins_user }}'"
 
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
 hudsonRealm.createAccount('{{ jenkins_user }}','{{ jenkins_passwd }}')

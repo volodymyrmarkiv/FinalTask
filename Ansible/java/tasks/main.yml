@@ -2,6 +2,7 @@
 # tasks file for java
 - name: Install java-1.8.0-openjdk
   yum: update_cache=yes name=java-1.8.0-openjdk state=latest
+  when: inventory_hostname != "AmazonLinux4"
 
 - name: Install java-1.8.0-openjdk-devel
   yum: update_cache=yes name=java-1.8.0-openjdk-devel state=latest
@@ -10,3 +11,8 @@
   # ideas for future
   #when: ansible_facts['address'] == '172.31.0.12'
   #when: ansible_default_ipv4.address == "172.31.0.12"
+
+- name: Install java-openjdk11
+  shell:
+    cmd: amazon-linux-extras install java-openjdk11 -y
+  when: inventory_hostname == "AmazonLinux4"

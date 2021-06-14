@@ -1,0 +1,19 @@
+---
+# tasks file for docker
+- block:
+
+  - name: Install docker
+    shell: |
+      amazon-linux-extras install docker -y
+      service docker start
+      usermod -a -G docker ec2-user
+      systemctl enable docker
+
+  - name: Create docker volumes for Sonarqube
+    shell: |
+      docker volume create --name sonarqube_data
+      docker volume create --name sonarqube_logs
+      docker volume create --name sonarqube_extensions
+      docker run --rm -d -p 9000:9000 -v sonarqube_extensions:/opt/sonarqube/extensions -v sonarqube_data:/opt/sonarqube/data -v sonarqube_logs:/opt/sonarqube/logs sonarqube:lts-community
+  
+  when: inventory_hostname == "AmazonLinux4"

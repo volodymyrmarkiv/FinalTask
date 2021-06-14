@@ -200,7 +200,6 @@ resource "aws_instance" "build" {
       host        = aws_instance.build.public_ip
     }
   }
-
   # Add instance to security group
   vpc_security_group_ids = ["sg-fea3788e",
     aws_security_group.ssh_sg.id
@@ -223,5 +222,31 @@ resource "aws_eip" "eip_web_server" {
 
 resource "aws_eip" "eip_build" {
   instance = aws_instance.build.id
+  vpc      = true
+}
+
+####### Sonarqube block #######
+
+resource "aws_instance" "test" {
+  ami               = data.aws_ami.amazon_linux.id
+  instance_type     = "t3.medium"
+  availability_zone = "eu-central-1c"
+  key_name          = "FinalTaskEPAM"
+  private_ip        = "172.31.0.13"
+
+
+  # Add instance to the security group
+  vpc_security_group_ids = ["sg-fea3788e",
+    aws_security_group.ssh_sg.id,
+    aws_security_group.sonarqube_sg.id
+  ]
+
+  tags = {
+    Name = "Sonarqube"
+  }
+}
+
+resource "aws_eip" "eip_test" {
+  instance = aws_instance.test.id
   vpc      = true
 }
