@@ -44,6 +44,9 @@
       insertbefore: '^DAEMON_ARGS='
     notify: Restart Jenkins
 
+  - name: Restart Tomcat
+    service: name=tomcat state=restarted
+
   - name: Pause for 90 seconds to let Jenkins getting restarted
     pause:
       seconds: 90
@@ -75,6 +78,5 @@
       - maven-plugin
       - ssh-agent
       - blueocean
-    notify: Restart Jenkins
 
   when: inventory_hostname == "AmazonLinux"

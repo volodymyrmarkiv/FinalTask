@@ -1,5 +1,9 @@
 pipeline {
 
+    triggers {
+        githubPush()
+    }
+
     agent {
         node {
             label 'build'
@@ -8,7 +12,7 @@ pipeline {
 
     tools { 
         maven 'maven-3.0.5'
-        jdk 'java-1.8'
+        jdk 'java-1.8.0'
     }
 
     options {
@@ -47,7 +51,7 @@ pipeline {
 
         stage('Testing') {
             steps {
-                sh "mvn clean verify sonar:sonar -Dsonar.login=ec251c0313bd0ff3039bb2bcf84781cf0dbe2291"
+                sh "mvn clean verify sonar:sonar -Dsonar.login=5da0e763d3a08c1006b50ebdf443eb15a827edbc"
             }
         }
 
@@ -61,13 +65,6 @@ pipeline {
                   sshagent (credentials: ['ssh-aws-key']) {
                     sh 'scp -o StrictHostKeyChecking=no ${ARTIFACT} ec2-user@172.31.0.11:${TOMCAT_DIR}'
                 }
-            }
-        }
-        stage('Priting All Global Variables') {
-            steps {
-                sh """
-                env
-                """
             }
         }
 

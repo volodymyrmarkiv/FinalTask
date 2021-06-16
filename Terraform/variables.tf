@@ -17,3 +17,28 @@ variable "ec2_instance_type" {
   type        = string
   default     = "t2.micro"
 }
+
+variable "local_private_key" {
+  description = "AWS local private key"
+  type        = string
+  default     = "/Users/caroot/.aws/FinalTaskEPAM.pem"
+}
+
+variable "aws_private_key" {
+  description = "AWS private key name"
+  type        = string
+  default     = "FinalTaskEPAM"
+}
+
+variable "availability_zone" {
+  description = "AWS private key name"
+  type        = string
+  default     = "eu-central-1c"
+}
+
+variable "username" {
+  description = "AWS private key name"
+  type        = string
+  default     = "ec2-user"
+}
+

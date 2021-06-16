@@ -43,18 +43,18 @@ resource "aws_subnet" "eu_central_subnet" {
 resource "aws_instance" "jen_controller" {
   ami               = data.aws_ami.amazon_linux.id
   instance_type     = var.ec2_instance_type
-  availability_zone = "eu-central-1c"
-  key_name          = "FinalTaskEPAM"
+  availability_zone = var.availability_zone
+  key_name          = var.aws_private_key
   private_ip        = "172.31.0.10"
 
 # Add private Amazon key to instance
   provisioner "file" {
-    source = "/Users/caroot/.aws/FinalTaskEPAM.pem"
+    source = var.local_private_key
     destination = "/home/ec2-user/.ssh/FinalTaskEPAM.pem"
     connection {
       type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      user        = var.username
+      private_key = file(var.local_private_key)
       host        = aws_instance.jen_controller.public_ip
   }
 }
@@ -65,18 +65,11 @@ resource "aws_instance" "jen_controller" {
     destination = "/home/ec2-user/provisioner.sh"
     connection {
       type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      user        = var.username
+      private_key = file(var.local_private_key)
       host        = aws_instance.jen_controller.public_ip
     }
   }
-/* # Install git on Jen/Ans Controller. Try module "consul" and S3 Bucket :)
-  provisioner "git" {
-    inline = [
-      "sudo yum install -y git",
-      "git clone ..."
-    ]
-} */
 
   # Enable epel-release and install ansible
   provisioner "remote-exec" {
@@ -86,11 +79,29 @@ resource "aws_instance" "jen_controller" {
     ]
     connection {
       type        = "ssh"
+      user        = var.username
+      private_key = file(var.local_private_key)
+      host        = aws_instance.jen_controller.public_ip
+    }
+  }
+
+/*
+  # Clone github repo with Ansible code
+  provisioner "remote-exec" {
+    inline = [
+      "cd /home/ec2-user/",
+      "git clone git@github.com:volodymyrmarkiv/FinalTask.git"
+      "cd Ansible",
+      "ansible-playbook main.yml"
+    ]
+    connection {
+      type        = "ssh"
       user        = "ec2-user"
       private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
       host        = aws_instance.jen_controller.public_ip
     }
   }
+*/
 
   # Add instance to security group
   vpc_security_group_ids = ["sg-fea3788e",
@@ -106,8 +117,8 @@ resource "aws_instance" "jen_controller" {
 resource "aws_instance" "web_server" {
   ami               = data.aws_ami.amazon_linux.id
   instance_type     = var.ec2_instance_type
-  availability_zone = "eu-central-1c"
-  key_name          = "FinalTaskEPAM"
+  availability_zone = var.availability_zone
+  key_name          = var.aws_private_key
   private_ip        = "172.31.0.11"
   #subnet_id         = aws_subnet.eu_central_subnet.id
 
@@ -116,8 +127,8 @@ resource "aws_instance" "web_server" {
     destination = "/home/ec2-user/mkdir_jenkins.sh"
     connection {
       type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      user        = var.username
+      private_key = file(var.local_private_key)
       host        = aws_instance.web_server.public_ip
     }
   }
@@ -131,8 +142,8 @@ resource "aws_instance" "web_server" {
     ]
     connection {
       type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      user        = var.username
+      private_key = file(var.local_private_key)
       host        = aws_instance.web_server.public_ip
     }
   }
@@ -151,8 +162,8 @@ resource "aws_instance" "web_server" {
 resource "aws_instance" "build" {
   ami               = data.aws_ami.amazon_linux.id
   instance_type     = var.ec2_instance_type
-  availability_zone = "eu-central-1c"
-  key_name          = "FinalTaskEPAM"
+  availability_zone = var.availability_zone
+  key_name          = var.aws_private_key
   private_ip        = "172.31.0.12"
   #subnet_id         = aws_subnet.eu_central_subnet.id
 
@@ -161,8 +172,8 @@ resource "aws_instance" "build" {
     destination = "/home/ec2-user/mkdir_jenkins.sh"
     connection {
       type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      user        = var.username
+      private_key = file(var.local_private_key)
       host        = aws_instance.build.public_ip
     }
   }
@@ -175,8 +186,8 @@ resource "aws_instance" "build" {
     ]
     connection {
       type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("/Users/caroot/.aws/FinalTaskEPAM.pem")
+      user        = var.username
+      private_key = file(var.local_private_key)
       host        = aws_instance.build.public_ip
     }
   }
@@ -210,8 +221,8 @@ resource "aws_eip" "eip_build" {
 resource "aws_instance" "test" {
   ami               = data.aws_ami.amazon_linux.id
   instance_type     = "t3.medium"
-  availability_zone = "eu-central-1c"
-  key_name          = "FinalTaskEPAM"
+  availability_zone = var.availability_zone
+  key_name          = var.aws_private_key
   private_ip        = "172.31.0.13"
 
 
