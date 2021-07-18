@@ -44,8 +44,8 @@
       insertbefore: '^DAEMON_ARGS='
     notify: Restart Jenkins
 
-  - name: Restart Tomcat
-    service: name=tomcat state=restarted
+  - name: Restart Jenkins
+    service: name=jenkins state=restarted
 
   - name: Pause for 90 seconds to let Jenkins getting restarted
     pause:

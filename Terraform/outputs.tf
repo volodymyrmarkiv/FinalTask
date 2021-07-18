@@ -25,5 +25,5 @@ output "build_ip" {
 
 output "sonarqube_ip" {
   description = "Public IP addresses of Sonarqube EC2 instance"
-  value       = aws_eip.test.public_ip
+  value       = aws_eip.eip_test.public_ip
 }
